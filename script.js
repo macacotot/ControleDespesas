@@ -5,7 +5,7 @@ const balanceDisplay = document.querySelector('#balance')
 const form = document.querySelector('#form')
 const inputTransactionName = document.querySelector('#text')
 const inputTransactionAmount = document.querySelector('#amount')
-//console.log(transactionUl);
+console.log({ inputTransactionName, inputTransactionAmount });
 
 const dummyTransactions = [
   { id: 1, name: "Bolo de brigadeiro", amount: -20 },  //amount é o valor, que nesse caso significa despesa por estar negativo
@@ -25,7 +25,7 @@ const addTransactionIntoDOM = (transaction) => {
         ${transaction.name} <span> ${operator} R$ ${amountWithoutOperator}</span><button class="delete-btn">x</button>  `; //Serve para pegar a penas o valor absoluto, ou seja, sem os sinais (- ou +)
 
   transactionUl.append(li);
-//   transactionUl.prepend(li);
+  //   transactionUl.prepend(li);
 
   // console.log(li);
   //console.log(operator);
@@ -41,31 +41,31 @@ const addTransactionIntoDOM = (transaction) => {
 // addTransactionIntoDOM(dummyTransactions[1]);
 
 const updateBalanceValues = () => {
-    const transactionsAmounts = dummyTransactions.map(
-      (transaction) => transaction.amount
-    ); //O map nesse caso permite que manipulemos somente os atributos necessários para que realizemos o cálculo
+  const transactionsAmounts = dummyTransactions.map(
+    (transaction) => transaction.amount
+  ); //O map nesse caso permite que manipulemos somente os atributos necessários para que realizemos o cálculo
 
-    
-    const income = transactionsAmounts //income são as receitas
-      .filter((value) => value > 0) //filtra os valores do vetor, retornando somente os números que atendem a condição
-      .reduce((accumulator, value) => accumulator + value, 0) // O reduce é uma alternativa mais otimizada para realizara a soma de valores 
-      .toFixed(2);
 
-    const expense = Math.abs(transactionsAmounts  //Math.abs serve para 
-      .filter((value) => value < 0)
-      .reduce((accumulator, value) => accumulator + value, 0))
-      .toFixed(2);
-    console.log(expense)  //expense são as despesas
+  const income = transactionsAmounts //income são as receitas
+    .filter((value) => value > 0) //filtra os valores do vetor, retornando somente os números que atendem a condição
+    .reduce((accumulator, value) => accumulator + value, 0) // O reduce é uma alternativa mais otimizada para realizara a soma de valores 
+    .toFixed(2);
 
-    const total = transactionsAmounts
-      .reduce((acumulator, transaction) => acumulator + transaction, 0) //soma e reduz os elementos do array em somente um
-      .toFixed(2); 
-    balanceDisplay.textContent = `R$ ${total}`
-    incomeDisplay.textContent = `R$ ${income}`
-    expenseDisplay.textContent = `R$ ${expense}`
-    console.log(income);
-  };
-  
+  const expense = Math.abs(transactionsAmounts  //Math.abs serve para 
+    .filter((value) => value < 0)
+    .reduce((accumulator, value) => accumulator + value, 0))
+    .toFixed(2);
+  console.log(expense)  //expense são as despesas
+
+  const total = transactionsAmounts
+    .reduce((acumulator, transaction) => acumulator + transaction, 0) //soma e reduz os elementos do array em somente um
+    .toFixed(2);
+  balanceDisplay.textContent = `R$ ${total}`
+  incomeDisplay.textContent = `R$ ${income}`
+  expenseDisplay.textContent = `R$ ${expense}`
+  console.log(income);
+};
+
 
 const init = () => {
   dummyTransactions.forEach(addTransactionIntoDOM);
@@ -74,7 +74,16 @@ const init = () => {
 
 
 init();
-const upDateLocalStorage = () => {
-  localStorage.setItem('transactions', JSON.stringify(transactions));
-}
+const generateID = ()=> Math.round(Math.random()*1000) //Serve para criar os ID, que serve para identificação da transação de forma automatica
+
+form.addEventListener('submit', event => {
+  event.preventDefault()
+  const transName = inputTransactionName.value.trim()
+  const transAmount = inputTransactionAmount.value.trim()
+  if (inputTransactionName.value.trim() === '' || inputTransactionAmount.value.trim() === '') { // o '||' é um 'OU' então nessa linha funciona como se o transName for vazio ou o valor, vai aparecer um alerta 
+    alert('Por gentileza preencha tanto o nome quanto o valor da transação!!!') 
+    return}
+  const transaction = { id: generateID, name: transName, amount: transAmount }
+})
+
 
