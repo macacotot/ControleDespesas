@@ -1,4 +1,10 @@
 const transactionUl = document.querySelector("#transactions");  // O # serve para acessar um objeto expecifico no index por meio do  comando "querySelector"
+const incomeDisplay = document.querySelector('#money-plus')
+const expenseDisplay = document.querySelector('#money-minus')
+const balanceDisplay = document.querySelector('#balance')
+const form = document.querySelector('#form')
+const inputTransactionName = document.querySelector('#text')
+const inputTransactionAmount = document.querySelector('#amount')
 //console.log(transactionUl);
 
 const dummyTransactions = [
@@ -38,19 +44,26 @@ const updateBalanceValues = () => {
     const transactionsAmounts = dummyTransactions.map(
       (transaction) => transaction.amount
     ); //O map nesse caso permite que manipulemos somente os atributos necessários para que realizemos o cálculo
-    const total = transactionsAmounts.reduce((acumulator, transaction) => acumulator + transaction, 0).toFixed(2); //soma e reduz os elementos do array em somente um
-    const income = transactionsAmounts
-    .filter((value) => value > 0)
-    .reduce((accumulator, value) => accumulator + value, 0)
-    .toFixed(2);
-    console.log(income)
 
-    const total2 = transactionsAmounts.reduce((acumulator, transaction) => acumulator + transaction, 0).toFixed(2);
-    const income2 = transactionsAmounts
-    .filter((value) => value < 0)
-    .reduce((accumulator, value) => accumulator + value, 0)
-    .toFixed(2);
-    console.log(income2)
+    
+    const income = transactionsAmounts //income são as receitas
+      .filter((value) => value > 0) //filtra os valores do vetor, retornando somente os números que atendem a condição
+      .reduce((accumulator, value) => accumulator + value, 0) // O reduce é uma alternativa mais otimizada para realizara a soma de valores 
+      .toFixed(2);
+
+    const expense = Math.abs(transactionsAmounts  //Math.abs serve para 
+      .filter((value) => value < 0)
+      .reduce((accumulator, value) => accumulator + value, 0))
+      .toFixed(2);
+    console.log(expense)  //expense são as despesas
+
+    const total = transactionsAmounts
+      .reduce((acumulator, transaction) => acumulator + transaction, 0) //soma e reduz os elementos do array em somente um
+      .toFixed(2); 
+    balanceDisplay.textContent = `R$ ${total}`
+    incomeDisplay.textContent = `R$ ${income}`
+    expenseDisplay.textContent = `R$ ${expense}`
+    console.log(income);
   };
   
 
@@ -61,4 +74,7 @@ const init = () => {
 
 
 init();
+const upDateLocalStorage = () => {
+  localStorage.setItem('transactions', JSON.stringify(transactions));
+}
 
